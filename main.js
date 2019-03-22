@@ -5,7 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const cors = require("cors");
 const nodemon = require("nodemon");
 const jwt = require("jsonwebtoken");
-const config = require("./config");
+const config = require("./key/config");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 
@@ -172,11 +172,101 @@ app.use((request, response, next) => {
     }
 });
 
-// to save meetup details of the user
+// to save meetup details of the user and to update the details if already present
 
 app.post("/saveMeetup", (request, response) => {
+    let username = request.decode.username;
+    let location = request.body.location;
+    let preference = request.body.pref;
+    let timeDate = request.body.timeDate;
+    let description = request.body.description;
 
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username": username}, (error, result) => {
+                if(error){
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    if (result == null){ // includes the condition when the user have no meetup scheduled
+                        db.collection("meetupDetails").insertOne({
+                            "username" : username,
+                            "timeDate" : timeDate,
+                            "location" : location,
+                            "preference" : preference,
+                            "description" : description
+                        });
+                        response.render("meetupMatches.hbs", {
+                            result : "Your meetup matches will appear here"
+                        })
+                    }
+                    else {
+                        let identifier = {"username" : username};
+                        let update = { $set : {
+                                "username" : username,
+                                "timeDate" : timeDate,
+                                "location" : location,
+                                "preference" : preference,
+                                "description" : description
+                            }
+                        }
+                        db.collection("meetupDetails").updateOne(identifier, update, (error, result) => {
+                            if (error){
+                                response.render("error.hbs" ,{
+                                    error : error
+                                })
+                            }
+                            else {
+                                response.render("userpage.hbs", {
+                                    success : "Successfully updated the user details"
+                                })
+                            }
+                        })
+                    }
+                }
+            });
+        }
+    })
 });
+
+
+// route to get the saved meetup details
+
+app.get("/getSavedDetails", (request, response) => {
+    let username = request.decode.username;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username": username}, (error, result) => {
+                if(error){
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    response.json(JSON.stringify({
+                        "username" : request.username,
+                        "location" : request.location,
+                        "timeDate" : request.timedate,
+                        "preference" : request.pref,
+                        "description" : request.description
+                    }))
+                }
+            });
+        }
+    })
+})
 
 app.listen(3000, () => {
     console.log("Server is up at port 3000");

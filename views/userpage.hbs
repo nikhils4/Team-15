@@ -11,12 +11,12 @@ Hey, {{name}}
     Location : <input type="text" name="location">
     Preferences : Movies <input type="radio" name="pref" value="movies">
                     General Talk<input type="radio" name="pref" value="general talk">
-    Time : <input type="datetime-local" name="time-date">
+    Time : <input type="datetime-local" name="timeDate">
     Description : <textarea name="description"></textarea>
 
     <button type="submit">Save Meetup Details</button>
 </form>
-
+{{success}}
 <form action="/logout" method="get">
     <button type="submit">Logout</button>
 </form>
