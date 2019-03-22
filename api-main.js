@@ -39,35 +39,35 @@ app.get("/signup", (request, response) => {
 
 // route to process login information
 
-// app.post("/login", (request, response) => {
-//     var username = request.body.usernameLogin;
-//     var password = request.body.passwordLogin;
-//     MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             var db = database.db("codeFreaks");
-//             var data = db.collection("userDetails").findOne({"username": username, "password": password});
-//             data.then(function(result) {
-//                 if (result != null){
-//                     username = result["username"];
-//                     name = result["name"];
-//                     const payload = {"username" : username};
-//                     var token = jwt.sign(payload, app.get('secret'));
-//                     response.cookie('sessionJWT', token, { httpOnly: true});  // signed : true (for even encrypting the cookie using the cookieparser secret )
-//                     response.render("userPage.hbs", {
-//                         name : name
-//                     })
-//                 }
-//                 else {
-//                     response.render("login.hbs", {
-//                         error : "The username and password entered by you are not valid. Try signing upfirst :)"
-//                     })
-//                 }
-//             } )
-//         }
-//     })
-// });
+app.post("/login", (request, response) => {
+    var username = request.body.usernameLogin;
+    var password = request.body.passwordLogin;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            console.log(error);
+        } else {
+            var db = database.db("codeFreaks");
+            var data = db.collection("userDetails").findOne({"username": username, "password": password});
+            data.then(function(result) {
+                if (result != null){
+                    username = result["username"];
+                    name = result["name"];
+                    const payload = {"username" : username};
+                    var token = jwt.sign(payload, app.get('secret'));
+                    response.cookie('sessionJWT', token, { httpOnly: true});  // signed : true (for even encrypting the cookie using the cookieparser secret )
+                    response.render("userPage.hbs", {
+                        name : name
+                    })
+                }
+                else {
+                    response.render("login.hbs", {
+                        error : "The username and password entered by you are not valid. Try signing upfirst :)"
+                    })
+                }
+            } )
+        }
+    })
+});
 //
 // // route to process sign up page
 

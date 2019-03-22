@@ -1,12 +1,13 @@
-const express = require("express"); //done
-const hbs = require("hbs"); //done
-const bodyParser = require("body-parser"); //done
-const MongoClient = require('mongodb').MongoClient; //done
-const cors = require("cors"); //done
-const nodemon = require("nodemon"); //done
-const jwt = require("jsonwebtoken"); //done
-var config = require("./config"); //done
-const cookieParser = require("cookie-parser"); //done
+const express = require("express");
+const hbs = require("hbs");
+const bodyParser = require("body-parser");
+const MongoClient = require('mongodb').MongoClient;
+const cors = require("cors");
+const nodemon = require("nodemon");
+const jwt = require("jsonwebtoken");
+const config = require("./config");
+const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 // database configuration
 let url = "mongodb://localhost:27017/hello";
@@ -47,11 +48,11 @@ app.post("/signup", (request, response) => {
     //value storage that is received from the frontend
 
     let name = request.body.name;
-    let id = request.body.aadhar;
+    let id = parseInt(request.body.aadhar);
     let guardianEmail = request.body.email;
     let username = request.body.username;
     let password = request.body.password;
-
+    console.log(typeof id);
     // db connection and fetching
 
     MongoClient.connect(url, { useNewUrlParser: true } , function(error, database) {
@@ -59,66 +60,124 @@ app.post("/signup", (request, response) => {
             console.log("There was error connecting with the database!", error)
         }
         else{
-            var db = database.db("hello");
+            let db = database.db("hello");
             db.createCollection("userDetails", function(errordbCreation, res) {
                 if (errordbCreation) {
                     console.log(errordbCreation);
                 }
                 else {
-                    db.collection("details").findOne({"aadhar" : id}, function (error, result) {
+                    db.collection("aadharDetails").findOne({"aadhar" : id, "name" : name}, function (error, result) {
                         if (error) {
-
-                        }
-                    });
-
-
-                    MongoClient.connect(url, function(err, db) {
-                        if (err) throw err;
-                        var dbo = db.db("mydb");
-                        dbo.collection("customers").findOne({}, function(err, result) {
-                            if (err) throw err;
-                            console.log(result.name);
-                            db.close();
-                        });
-                    });
-
-
-                    valid.then(function(result) {
-                        console.log(result);
-                        if (result == null) {
                             response.render("error.hbs", {
-                                error : "The aadhar details provided by you is not valid !!"
+                                error : "There was error retrieving the details form the database"
                             });
                         }
                         else {
-                            let data = {"name": name, "aadhar" : id, "guardianEmail": guardianEmail,  "username" : username,"password": password};
-                            db.collection("regDetails").insertOne(data, function (errorInsertion, res) {
-                                if (errorInsertion) {
-                                    console.log(errorInsertion);
-                                } else {
-                                    response.render("signUpsuccessful.hbs");
-                                }
-                            })
+                            if (result == null){
+                                response.render("error.hbs", {
+                                    error : "The details given by you were not correct and didn't matched our database"
+                                })
+                            }
+                            else{
+                                //password hashing
+                                let hashpassword = bcrypt.hashSync(password, 12);
+                                db.collection("userDetails").insertOne({"name" : name,
+                                    "aadhar" : id,
+                                    "guardianEmail" : guardianEmail,
+                                    "username" : username,
+                                    "password" : hashpassword
+                                });
+                                response.render("signUpsuccessful.hbs", {
+                                    success : "You are successfully registered"
+                                });
+                            }
                         }
                     });
-
-
-
-                    // console.log(db.collection("citizens").findOne({"aadhar" : aadhar, "name" : name}).then (function(result) {
-                    //     console.log(result);
-                    // }));
-                    // if (db.collection("citizens").findOne({"aadhar" : aadhar, "name" : name})){
-                    //     console.log(aadhar);
-                    //     console.log(name);
-                    //
-                    // }
-                    // else {
-                    //
-                    // }
-
                 }
             })
         }
     })
 
+});
+
+// route to login user and sign jwt to make persistent sessions
+
+app.post("/login", (request, response) => {
+    let username = request.body.usernameLogin;
+    let password = request.body.passwordLogin;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("userDetails").findOne({"username": username}, (error, result) => {
+                if(error){
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    let passwordDB = result.password;
+                    if(bcrypt.compareSync(password, passwordDB)) {
+                        username = result.username;
+                        name = result.name;
+                        const payload = {"username" : username};
+                        let token = jwt.sign(payload, app.get('secret'));
+                        response.cookie('sessionJWT', token, { httpOnly: true});
+
+                        response.render("userpage.hbs", {
+                            name :result.name,
+                        })
+                    } else {
+                        response.render("error.hbs" ,{
+                            error : "The password and username provided by you didn't match out database"
+                        })
+                    }
+                }
+            });
+        }
+    })
+});
+
+
+app.get("/logout", (request, response) => {
+    response.clearCookie("sessionJWT");
+    response.render("logout.hbs");
+});
+
+//jwt middleware to verify user credentials
+
+app.use((request, response, next) => {
+    var token = request.cookies.sessionJWT;
+    if (token) {
+        jwt.verify(token , app.get('secret'), function (error , decode){
+            console.log(decode);
+            if (error) {
+                response.render("error.hbs", {
+                    error : "The token authnetication failed try logging in again"
+                })
+            }
+            else{
+                request.decode = decode;
+                next();
+            }
+        } )
+    }
+    else{
+        response.render("error.hbs", {
+            error : "You can't access this page this is a private page, try logging in first :)"
+        })
+    }
+});
+
+// to save meetup details of the user
+
+app.post("/saveMeetup", (request, response) => {
+
+});
+
+app.listen(3000, () => {
+    console.log("Server is up at port 3000");
 });
