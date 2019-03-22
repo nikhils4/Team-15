@@ -5,12 +5,13 @@ const MongoClient = require('mongodb').MongoClient;
 const cors = require("cors");
 const nodemon = require("nodemon");
 const jwt = require("jsonwebtoken");
-const config = require("./key/config");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const config = require("./key/config");
 
 // database configuration
 let url = "mongodb://localhost:27017/hello";
+
 let app = express();
 
 app.set("secret", config.secret);
@@ -19,6 +20,21 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
+
+//functions used in the api
+
+function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
 
 // route to sign up page
 
@@ -79,17 +95,26 @@ app.post("/signup", (request, response) => {
                                 })
                             }
                             else{
-                                //password hashing
-                                let hashpassword = bcrypt.hashSync(password, 12);
-                                db.collection("userDetails").insertOne({"name" : name,
-                                    "aadhar" : id,
-                                    "guardianEmail" : guardianEmail,
-                                    "username" : username,
-                                    "password" : hashpassword
-                                });
-                                response.render("signUpsuccessful.hbs", {
-                                    success : "You are successfully registered"
-                                });
+                                let age = getAge(result.dob)
+                                if (age >=60 && age <=80){
+                                    //password hashing
+                                    let hashpassword = bcrypt.hashSync(password, 12);
+                                    db.collection("userDetails").insertOne({"name" : name,
+                                        "aadhar" : id,
+                                        "guardianEmail" : guardianEmail,
+                                        "username" : username,
+                                        "password" : hashpassword
+                                    });
+                                    response.render("signUpsuccessful.hbs", {
+                                        success : "You are successfully registered"
+                                    });
+                                }
+                                else {
+                                    response.render("error.hbs", {
+                                        error : "According to adhar details you are not in the optimum range to use this website"
+                                    })
+                                }
+
                             }
                         }
                     });
@@ -267,6 +292,13 @@ app.get("/getSavedDetails", (request, response) => {
         }
     })
 })
+
+//get details of similar meetup
+
+app.get("/getSimilarMeetup", (request, response) => {
+
+})
+
 
 app.listen(3000, () => {
     console.log("Server is up at port 3000");
