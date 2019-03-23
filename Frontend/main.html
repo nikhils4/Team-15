@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main Page</title>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<style type="text/css">
+		
+		input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px white inset;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
+
+        input {
+			border: 0px;
+			border-bottom: 1px solid;
+			/*width: 250px;*/
+		}
+
+		.background {
+			padding: 0px;
+		}
+
+		.header {
+			width: 100%;
+			height: 60px;
+			background-color: aqua;
+		}
+
+		.username {
+			/*margin-left: 30px;*/
+			/*margin-top: 20px;*/
+			font-size: 2em;
+			margin-left: 10px;
+			padding-top: 10px;
+		}
+
+		.logout {
+			float: right;
+			margin-right: 30px;
+			transform: translateY(-120%);
+			/*margin-top: 20px;*/
+		}
+
+		.card {
+			background-color: #fff;
+	  		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  			transition: 0.3s;
+  			/*width: 40%;*/
+  			border-radius: 20px;
+  			/*text-align: center;*/
+  			padding: 20px;
+		}
+
+		.submit {
+			width: 100px;
+			height: auto;
+			margin-left: 45%;
+			margin-top: 30px;
+		}
+		.pad {
+			margin-left: 10px;
+		}
+
+
+	</style>
+
+</head>
+<body>
+
+	<div class="background">
+
+		<div class="header">
+			<div class="username">Username</div>
+			<button class="logout">Logout</button>
+		</div>
+		<div class="card">
+		<form>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+				<div class="col-md-4">
+					<h3>Preference</h3>
+					<input type="radio" name="preference" value="One">One<br>
+					<input type="radio" name="preference" value="Two">Two<br>
+					<input type="radio" name="preference" value="Three">Three<br>
+					<input type="radio" name="preference" value="Four">Four<br>
+					<input type="radio" name="preference" value="Five">Five<br>
+				</div>
+
+				<!-- <div class="col-md-2"></div> -->
+			<!-- </div> -->
+
+			<!-- <div class="row">		 -->
+				<!-- <div class="col-md-2"></div> -->
+				
+				<div class="time col-md-4">
+					<h3>Time</h3>
+					<input type="time" name="time">
+				</div>
+				<!-- <div class="col-md-2"></div> -->
+			<!-- </div> -->
+			<!-- <div class="row"> -->
+				<!-- <div class="col-md-2"></div> -->
+				<div class="col-md-4">
+					<h3>Location</h3>
+					<input id="location" type="text" name="location" placeholder="Enter Location">
+				</div>
+				</div>
+				<div class="col-md-2"></div>
+
+				<!-- <div class="col-md-2"></div> -->
+			</div>
+			<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<input id="description" name="description" type="text" placeholder="Description" style="width: 600px;">
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<button class="submit">Submit</button>
+		</form>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8 card">
+					
+					<div class="user_name col-md-12"><h3>User Name</h3></div>
+
+					<div class="date col-md-4">Date</div>
+
+					<div class="preferences col-md-4">Preferences</div>
+
+					<div class="time col-md-4">Time</div>
+
+					<div class="description">Description</div>
+					<div class="col-md-2"></div>
+					<button class="pad col-md-4">Accept</button>
+					<!-- <div class="col-md-3"></div> -->
+					<button class="pad col-md-4">Reject</button>
+					<div class="col-md-2"></div>
+
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script type="text/javascript">
+		function activatePlacesSearch() {
+			var input = document.getElementById("location");
+			var autocomplete = new google.maps.places.Autocomplete(input);
+		}
+
+	</script>
+
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkqBEmy8wmdJeUwjwUTUiBCieJ6o4LYNI&libraries=places&region=in&callback=activatePlacesSearch"></script>
+
+</body>
+</html>
