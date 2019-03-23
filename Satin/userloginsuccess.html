@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Main Page</title>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<style type="text/css">
+		
+		input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px white inset;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
+
+        .background {
+            padding: 0px;
+            background-color: #E5E6E8;
+        }
+
+        .header {
+            width: 100%;
+            height: 60px;
+            background-color: aqua;
+        }
+
+        .username {
+            /*margin-left: 30px;*/
+            /*margin-top: 20px;*/
+            font-size: 2em;
+            margin-left: 10px;
+            padding-top: 10px;
+        }
+
+        .logout {
+            float: right;
+            margin-right: 30px;
+            transform: translateY(-120%);
+            /*margin-top: 20px;*/
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            /*width: 40%;*/
+            border-radius: 20px;
+            /*text-align: center;*/
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        #location {
+            width: 250px;
+        }
+
+        .submit {
+            margin-left: 45%;
+            margin-top: 20px;
+        }
+
+        .pad {
+            margin-left: 100px;
+        }
+
+        button {
+            margin-left: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="background">
+
+        <div class="header">
+            <div class="username">Username</div>
+            <button class="logout">Logout</button>
+        </div>
+
+        <div>
+
+    <form method="POST" action="/saveMeetup">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1"></div>
+                    <div class="card col-md-10">
+                        <div class="col-md-4">
+                        <h3>Preference</h3>
+                                <input type="radio" name="pref" value="One">One<br>
+                                <input type="radio" name="pref" value="Two">Two<br>
+                                <input type="radio" name="pref" value="Three">Three<br>
+                                <input type="radio" name="pref" value="Four">Four<br>
+                                <input type="radio" name="pref" value="Five">Five<br>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>Time</h3>
+                                <input type="datetime-local" name="timeDate">
+                        </div>
+
+                        <div class="col-md-4">
+                            <h3>Location</h3>
+                                <input id="location" type="text" name="location" placeholder="Enter Location">
+                        </div>
+                        <!-- <div class="desc_submit"> -->
+                            <input id="description" name="description" type="text" placeholder="Description" style="width: 600px;margin-top: 100px;">
+
+                            <button class="submit" id="submit">Submit</button>
+                        <!-- </div> -->
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </form>
+
+            <div class="container">
+                <div id="got" class="row">
+                    
+<!--              <div class="col-md-1"></div>
+             
+                <div class="col-md-10 card">
+                    
+                    <div id="username" class="user_name col-md-12"><h3>User Name</h3></div>
+
+                    <div id="date" class="date col-md-4">Date</div>
+
+                    <div id="preference" class="preferences col-md-4">Preferences</div>
+
+                    <div id="time" class="time col-md-4">Time</div>
+
+                    <div id="description" class="description">Description</div>
+                    <div class="col-md-2"></div>
+                    <button class="pad col-md-4">Accept</button>
+                    
+                    <button class="pad col-md-4">Reject</button>
+                    <div class="col-md-2"></div>
+
+                </div>
+
+            
+            <div class="col-md-1"></div> -->
+                </div>
+            </div>
+        <div style="margin-top: 50px"></div>
+    </div>
+        <script type="text/javascript">
+        function activatePlacesSearch() {
+            var input = document.getElementById("location");
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+    </script>
+
+        <script type="text/javascript">
+
+            var obj = [{'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
+                       {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
+                       {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'}];
+
+            // var main_card = document.getElementById("main_card");
+            
+            
+                for(var i=0;i<obj.length;i++) {
+                            var got = document.getElementById("got");
+                            // var start = document.createElement("div");
+                            // start.classList.add("col-md-1");
+
+                             // got.appendChild(start);   
+
+                            var node = document.createElement("div");
+                            node.classList.add("col-md-10","card","pad");
+                            var username = document.createElement("div");
+                            username.classList.add("user_name","col-md-12")
+                            var date = document.createElement("div");
+                            date.classList.add("date","col-md-4");
+                            var preference = document.createElement("div");
+                            preference.classList.add("preferences","col-md-4");
+                            var time = document.createElement("div");
+                            time.classList.add("time","col-md-4");
+                            var description = document.createElement("div");
+                            // description.classList.add("")
+                            var div1 = document.createElement("div");
+                            div1.classList.add("col-md-1");
+                            var btn1 = document.createElement("button");
+                            btn1.classList.add("pad","col-md-4");
+                            var btn2 = document.createElement("button");
+                            btn2.classList.add("pad","col-md-4");
+                            var div2 = document.createElement("div");
+                            div2.classList.add("col-md-1");
+                            // var end = document.createElement("div");
+                            // end.classList.add("col-md-1");
+
+                                // var username = document.getElementById("username");
+                                username.innerHTML = obj[i]['username'];
+                                // var date = document.getElementById("date");
+                                date.innerHTML = obj[i]['date'];
+                                // var preference = document.getElementById("preference");
+                                preference.innerHTML = obj[i]['preference'];
+                                // var time = document.getElementById('time');
+                                time.innerHTML = obj[i]['time'];
+                                // var description = document.getElementById("description");
+                                description.innerHTML = obj[i]['description'];
+                                btn1.innerHTML = 'Accept';
+                                btn2.innerHTML = 'Reject';
+
+                            node.appendChild(username);
+                            node.appendChild(date);
+                            node.appendChild(preference);
+                            node.appendChild(time);
+                            node.appendChild(description);
+                            node.appendChild(div1);
+                            node.appendChild(btn1);
+                            node.appendChild(btn2);
+                            node.appendChild(div2);
+
+                            
+                            // main_card.appendChild(node);
+                            got.appendChild(node);
+                            // got.appendChild(end);
+                            }
+
+            
+            $(document).ready(function() {
+                $("#submit").click(function() {
+                    $.ajax({
+                        type: 'GET',
+                        url: "http://"+a+".ngrok.io/pendingRequests",
+                        contentType: 'application/json',
+
+                        success: function(result) {
+                            // document.getElementById("output").innerHTML = result;
+
+                for(var i=0;i<obj.length;i++) {
+                            var got = document.getElementById("got");
+                            // var start = document.createElement("div");
+                            // start.classList.add("col-md-1");
+
+                             // got.appendChild(start);   
+
+                            var node = document.createElement("div");
+                            node.classList.add("col-md-10","card","pad");
+                            var username = document.createElement("div");
+                            username.classList.add("user_name","col-md-12")
+                            var date = document.createElement("div");
+                            date.classList.add("date","col-md-4");
+                            var preference = document.createElement("div");
+                            preference.classList.add("preferences","col-md-4");
+                            var time = document.createElement("div");
+                            time.classList.add("time","col-md-4");
+                            var description = document.createElement("div");
+                            // description.classList.add("")
+                            var div1 = document.createElement("div");
+                            div1.classList.add("col-md-1");
+                            var btn1 = document.createElement("button");
+                            btn1.classList.add("pad","col-md-4");
+                            var btn2 = document.createElement("button");
+                            btn2.classList.add("pad","col-md-4");
+                            var div2 = document.createElement("div");
+                            div2.classList.add("col-md-1");
+                            // var end = document.createElement("div");
+                            // end.classList.add("col-md-1");
+
+                                // var username = document.getElementById("username");
+                                username.innerHTML = result[i]['username'];
+                                // var date = document.getElementById("date");
+                                date.innerHTML = result[i]['date'];
+                                // var preference = document.getElementById("preference");
+                                preference.innerHTML = result[i]['preference'];
+                                // var time = document.getElementById('time');
+                                time.innerHTML = result[i]['time'];
+                                // var description = document.getElementById("description");
+                                description.innerHTML = result[i]['description'];
+                                btn1.innerHTML = 'Accept';
+                                btn2.innerHTML = 'Reject';
+
+                            node.appendChild(username);
+                            node.appendChild(date);
+                            node.appendChild(preference);
+                            node.appendChild(time);
+                            node.appendChild(description);
+                            node.appendChild(div1);
+                            node.appendChild(btn1);
+                            node.appendChild(btn2);
+                            node.appendChild(div2);
+
+                            
+                            // main_card.appendChild(node);
+                            got.appendChild(node);
+                            // got.appendChild(end);
+                            }
+
+                        }
+                    })
+                })
+            })
+
+        </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkqBEmy8wmdJeUwjwUTUiBCieJ6o4LYNI&libraries=places&region=in&callback=activatePlacesSearch"></script>
+</body>
+</html>
