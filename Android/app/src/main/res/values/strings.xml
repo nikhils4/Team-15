@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Code_Freaks</string>
+    <string name="login">Aadhar Card Number</string>
+    <string name="aadhar">Aadhar Card numner</string>
+    <string name="guardEmail">Guardian Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="signupText">Not a Member? Click to Sign up</string>
+    <string name="loginText">Already have an Account</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="name">Name</string>
+</resources>
