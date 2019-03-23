@@ -86,7 +86,7 @@ app.get("/signup", (request, response) => {
 // test route
 
 app.get("/test", (request, response) => {
-    response.json(JSON.stringify([{
+    response.json([{
         "name" : "Nikhil Singh",
         "location" : "Lucknow UP",
         "prefernce" : "Yoga",
@@ -100,7 +100,7 @@ app.get("/test", (request, response) => {
             "description" : "This of we could for a yoga exercises today",
             "timeDate" : "28 Dec 2018, 9:00PM"
         }
-        ]))
+        ])
 })
 
 //route to collect the data given by the sign up form and validate that with the existing aadhar card details

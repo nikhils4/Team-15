@@ -3,8 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Logout</title>
+<style>
+    form{
+        height: 100px;
+        width: 100px;
+        color: white;
+        margin-left: 40vw;
+    }
+    button {
+        height: 60px;
+        outline: none;
+        width: 25vw;
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 5px 10px 0 rgba(189,89,215,0.25);
+        text-align: center;
+        background-color: #2948ff;
+        color : white;
+        margin-top: -100px;
+        margin-left: -50px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
-You are successfully logged out :)
+<div style="text-align : center; margin: 400px;">
+    <h2>You are successfully logged out :)</h2>
+</div>
+
+<form action="/login" method="get">
+    <button>Login Again </button>
+</form>
+
+
+
 </body>
 </html>
