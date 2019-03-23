@@ -1,21 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
+    <title>Elec Vote</title>
+    <link rel="icon" href="../static/images/favicon.ico" type="image/x-icon">
+
+
+    <style type="text/css">
+        /*body{
+            background-image: url("../static/images/star-bg.svg") center cover cover;
+        }	*/
+        form{
+            height: 100px;
+            width: 100px;
+            color: white;
+            margin-left: 40vw;
+        }
+        button {
+            height: 60px;
+            background: transparent;
+            outline: none;
+            width: 25vw;
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 5px 10px 0 rgba(189,89,215,0.25);
+            text-align: center;
+            background-color: #2948ff;
+            color : white;
+            margin-top: -100px;
+            margin-left: -50px;
+            cursor: pointer;
+        }
+        #form1{
+            margin-top: 40vh;
+        }
+        body{
+            background: #0f0c29;
+            /*background: linear-gradient(to right, #24243e, #302b63, #0f0c29);*/
+        }
+    </style>
 </head>
 <body>
-This is the home page.
+<img style="position: relative;z-index:-2;max-height: 700px;max-width: 100%;margin-left: 160px;" src="smile.png">
 
-<form method="get" action="/login">
-    <button type="submit"> Login</button>
+<form action="/signup" method="GET">
+    <button><h2><b>Sign up</b></h2></button>
 </form>
-
-
-<form method="get" action="/signup">
-    <button type="submit">Signup</button>
+<form action="/login" method="GET">
+    <button><h2><b>Login</b></h2></button>
 </form>
-
 
 </body>
 </html>

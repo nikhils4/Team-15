@@ -77,16 +77,18 @@
     </style>
 </head>
 <body>
-{{name}}<br>
 {{success}}
 <div class="background">
 
     <div class="header">
-        <div class="username">Username</div>
-        <button class="logout">Logout</button>
+        <div class="username">{{name}}</div>
+        <form action="/logout" method="get">
+            <button class="logout">Logout</button>
+        </form>
     </div>
 
     <div>
+
 
         <form method="POST" action="/saveMeetup">
             <div class="container">
