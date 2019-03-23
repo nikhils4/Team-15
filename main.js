@@ -86,9 +86,21 @@ app.get("/signup", (request, response) => {
 // test route
 
 app.get("/test", (request, response) => {
-    response.json(JSON.stringify({"name" : "Varun se jyada talented koi ni hain, " +
-            "thapar se bada wala koi ni hain, usse bade wale hm hain, satin bhagewaan hain , " +
-            "muskan se accha manager koi ni hain"}))
+    response.json(JSON.stringify([{
+        "name" : "Nikhil Singh",
+        "location" : "Lucknow UP",
+        "prefernce" : "Yoga",
+        "description" : "This is really great of we could for a yoga exercises today",
+        "timeDate" : "27 Dec 2018, 9:00PM"
+    },
+        {
+            "name" : "Varun",
+            "location" : "Chandigarh",
+            "prefernce" : "Goam chalte hain",
+            "description" : "This of we could for a yoga exercises today",
+            "timeDate" : "28 Dec 2018, 9:00PM"
+        }
+        ]))
 })
 
 //route to collect the data given by the sign up form and validate that with the existing aadhar card details

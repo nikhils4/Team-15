@@ -1,26 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Signup</title>
+    <title>Sign Up</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+
+        .background {
+            background-color: #E5E6E8;
+            padding: 50px;
+        }
+
+        /*.card {
+            background-color: #fff;
+        }*/
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            /*width: 40%;*/
+            border-radius: 20px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .icons {
+            width: 20px;
+            height: auto;
+            margin: 10px;
+        }
+
+        .highlight-error {
+            border-color: red;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px white inset;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
+            outline: none;
+        }
+
+        input {
+            border: 0px;
+            border-bottom: 1px solid;
+            width: 250px;
+        }
+
+        button {
+            width: 150px;
+            height: 30px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            margin: 20px;
+        }
+
+    </style>
+
 </head>
 <body>
-<form method="post" action="/signup">
-    Name
-    <input name="name">
-    Aadhar Number
-    <input name="aadhar" type="number">
-    <br>
-    Guardians Email Address
-    <input name="email">
-    <br>
-    Username
-    <input name="username">
-    <br>
-    Password
-    <input name="password">
-    <br>
-    <button type="submit">Register</button>
-</form>
+
+<div class="background">
+
+    <form method="POST" action="/signup">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3"></div>
+
+                <div class="col-md-6 card">
+
+                    <div class="head-name"><h2>Smile Again</h2></div>
+
+                    <img class="image" src="img.jpg"><br>
+
+                    <img class="icons" src="user-icon.svg"><input id="name" name="name" placeholder="Name"><br>
+
+                    <img class="icons" src="id-card.svg"><input type="text" data-type="adhaar-number" name="aadhar" maxLength="19" placeholder="Aadhar Card Number"><br>
+
+                    <img class="icons" src="email.svg"><input id="email" type="email" name="email" placeholder="Email"><br>
+
+                    <img class="icons" src="user-icon.svg"><input id="username" type="text" name="username" placeholder="User Name"><br>
+
+                    <img class="icons" src="lock.svg"><input id="password" type="password" name="password" placeholder="Password"><br>
+
+                    <button>Submit</button>
+
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<script type="text/javascript">
+
+    //NAME
+    $("#name").on("change, blur",function(){
+        var name = $(this).val();
+        if (name.length <= 3) {
+            $(this).addClass("highlight-error");
+        } else {
+            $(this).removeClass("highlight-error");
+        }
+    });
+
+    //AADHAR VALIDATION
+    $('[data-type="adhaar-number"]').keyup(function() {
+        var value = $(this).val();
+        value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join("-");
+        $(this).val(value);
+    });
+
+    $('[data-type="adhaar-number"]').on("change, blur", function() {
+        var value = $(this).val();
+        var maxLength = $(this).attr("maxLength");
+        if (value.length != maxLength) {
+            $(this).addClass("highlight-error");
+        } else {
+            $(this).removeClass("highlight-error");
+        }
+
+        function validateEmail(email) {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            return emailReg.test( email );
+        }});
+
+    //EMAIL VALIDATION
+
+    $("input[type='email']").on("change, blur", function() {
+        var email = $(this).val();
+        if ( !validateEmail(email) ) {
+            $(this).addClass("highlight-error");
+        } else {
+            $(this).removeClass("highlight-error");
+        }
+    });
+
+    //USERNAME VALIDATION
+    $("#username").on("change, blur",function(){
+        var username = $(this).val();
+        if (username.length <= 3) {
+            $(this).addClass("highlight-error");
+        } else {
+            $(this).removeClass("highlight-error");
+        }
+    });
+    //PASSWORD VALIDATION
+    $("#password").on("change, blur",function(){
+        var password = $(this).val();
+        if (password.length <= 3) {
+            $(this).addClass("highlight-error");
+        } else {
+            $(this).removeClass("highlight-error");
+        }
+    });
+
+</script>
+
 </body>
 </html>
