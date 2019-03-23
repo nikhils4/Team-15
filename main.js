@@ -83,6 +83,14 @@ app.get("/signup", (request, response) => {
 });
 
 
+// test route
+
+app.get("/test", (request, response) => {
+    response.json(JSON.stringify({"name" : "Varun se jyada talented koi ni hain, " +
+            "thapar se bada wala koi ni hain, usse bade wale hm hain, satin bhagewaan hain , " +
+            "muskan se accha manager koi ni hain"}))
+})
+
 //route to collect the data given by the sign up form and validate that with the existing aadhar card details
     //if this gets validated then add the details in the database
     //if this doesn't gets validated ignore the details obtained from the sign up form and render an error message
@@ -591,6 +599,9 @@ app.post("/rejectRequest", (request, response) => {
         });
 })
 
-app.listen(3000, () => {
-    console.log("Server is up at port 3000");
+app.listen(3500, () => {
+    console.log("Server is up at port 3500");
 });
+
+//can accept multiple request of meetup
+//but cannot send multiple request to meet
