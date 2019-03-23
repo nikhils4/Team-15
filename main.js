@@ -7,7 +7,35 @@ const nodemon = require("nodemon");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+var nodemailer = require('nodemailer');
 const config = require("./key/config");
+
+
+function email(destEmail, time, place, priUser, secUser){
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'eciproje425@gmail.com',
+            pass: config.password
+        }
+    });
+
+    let mailOptions = {
+        from: 'eciproje425@gmail.com',
+        to: destEmail,
+        subject: 'Details about your Parent meetup',
+        text: "This is to inform you that your parent " + priUser + " has setup a meetup with " + secUser +
+            ". They would be meeting up at " + place + " on " + time + "."
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email sent successfully");
+        }
+    });
+}
 
 // database configuration
 let url = "mongodb://localhost:27017/hello";
@@ -296,9 +324,272 @@ app.get("/getSavedDetails", (request, response) => {
 //get details of similar meetup
 
 app.get("/getSimilarMeetup", (request, response) => {
-
+    let username = request.decode.username;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username" : username}, (error, result) => {
+                if (error) {
+                    console.log("there was some error !")
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    let matches = db.collection("meetupDetails").find({
+                        "location" : result.location,
+                        "timeDate" : result.timeDate
+                    }, {
+                        "username":1,
+                        "timeDate" : 1,
+                        "location" : 1,
+                        "preference" : 1,
+                        "description" : 1
+                    }).toArray();
+                    matches.then((res) => {
+                        console.log(res);
+                        response.json(JSON.stringify(res)); // giving in response the list of objects of all the similar meetup details
+                    })
+                }
+            })
+        }
+    })
 })
 
+//route to send request to various user
+
+app.post("/requestMeetup", (resuest, response) => {
+    let username = request.decode.username;
+    let destUsername = request.body.username;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username" : destUsername}, (error, result) => {
+                if (error) {
+                    console.log("there was some error !")
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    db.collection("meetupDetails").updateOne({ "username": destUsername},
+                        {$push: {'requests': username}
+                        });
+                }
+            })
+        }
+    })
+})
+
+app.get("/pendingRequests", (request, response) => {
+    let username = request.decode.username;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username" : username}, (error, result) => {
+                if (error) {
+                    console.log("there was some error !")
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    db.collection("meetupDetails").findOne({"username" : username}, (err, result) => {
+                        if(err) {
+                            response.render("error.hbs", {
+                                error : error
+                            })
+                        }
+                        else {
+                            let reqs = result.requests;
+                            let lengthReqs = reqs.length;
+                            let send = new Array();
+                            for (let i = 0; i < lengthReqs; i++){
+                                db.collection("meetupDetails").findOne({"username" : reqs[i]}, (err, res) => {
+                                    if(err){
+                                        response.render("error.hbs", {
+                                            error : error
+                                        })
+                                    }
+                                    else {
+                                        let resObject = {
+                                            "username" : res.username,
+                                            "timeDate" : res.timeDate,
+                                            "location" : res.location,
+                                            "preference" : res.preference,
+                                            "description" : res.description
+                                        }
+                                        send.push(resObject);
+                                    }
+                                })
+                            }
+                            console.log(send);
+                            response.json(JSON.stringify(send));
+                        }
+                    });
+                }
+            })
+        }
+    })
+} )
+
+// route to accept the request of a particular user includes mailing and all as well
+
+app.post("/acceptRequest", (request, response) => {
+    let username = request.decode.username;
+    let destUsername = request.body.username;
+    MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
+        if (error) {
+            response.render("error.hbs", {
+                error : error
+            });
+        } else {
+            let db = database.db("hello");
+            db.collection("meetupDetails").findOne({"username" : username}, (error, result) => {
+                if (error) {
+                    console.log("there was some error !")
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    db.collection("meetupDetails").updateOne({ "username": username},
+                        { $set : {"status" : 1, "meetingWith" : destUsername}},
+                        (err, res) => {
+                            if (err){
+                                response.render("error.hbs", {
+                                    error : err
+                                })
+                            }
+                            else {
+                                let time = res.timeDate;
+                                let place = res.location;
+                                db.collection("userDetails").findOne({"username" : username},
+                                    (error2, result2) => {
+                                    if (error2){
+                                        response.render("error.hbs", {
+                                            error : error2
+                                        })
+                                    }
+                                    else {
+                                        let destEmail = result2.guardianEmail;
+                                        var priUser = result2.name;
+                                        priUser = priUser.toLowerCase()
+                                            .split(' ')
+                                            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                            .join(' ');
+                                        db.collection("userDetails").findOne({"username" : destUsername},
+                                            (error4, result4) => {
+                                                if (error4){
+                                                    response.render("error.hbs", {
+                                                        error : error4
+                                                    })
+                                                }
+                                                else {
+                                                    var secUser = result4.name;
+                                                    secUser = secUser.toLowerCase()
+                                                        .split(' ')
+                                                        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                                        .join(' ');
+                                                    email(destEmail, time, place, priUser, secUser);
+                                                    response.render("successMeetupScheduled.hbs", {
+                                                        message : "Your meetup has been scheduled with " + secUser + " at " + place + " on " + time + "."
+                                                    })
+                                                }
+                                            })
+                                    }
+                                    })
+                            }
+                    });
+                }
+            })
+
+            // similarily for secondary user
+
+            db.collection("meetupDetails").findOne({"username" : destUsername}, (error, result) => {
+                if (error) {
+                    console.log("there was some error !")
+                    response.render("error.hbs", {
+                        error : error
+                    })
+                }
+                else {
+                    db.collection("meetupDetails").updateOne({ "username": destUsername},
+                        { $set : {"status" : 1, "meetingWith" : username}},
+                        (err, res) => {
+                            if (err){
+                                response.render("error.hbs", {
+                                    error : err
+                                })
+                            }
+                            else {
+                                let time = res.timeDate;
+                                let place = res.location;
+                                db.collection("userDetails").findOne({"username" : destUsername},
+                                    (error2, result2) => {
+                                        if (error2){
+                                            response.render("error.hbs", {
+                                                error : error2
+                                            })
+                                        }
+                                        else {
+                                            let destEmail = result2.guardianEmail;
+                                            var priUser = result2.name;
+                                            priUser = priUser.toLowerCase()
+                                                .split(' ')
+                                                .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                                .join(' ');
+                                            db.collection("userDetails").findOne({"username" : destUsername},
+                                                (error4, result4) => {
+                                                    if (error4){
+                                                        response.render("error.hbs", {
+                                                            error : error4
+                                                        })
+                                                    }
+                                                    else {
+                                                        var secUser = result4.name;
+                                                        secUser = secUser.toLowerCase()
+                                                            .split(' ')
+                                                            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                                                            .join(' ');
+                                                        email(destEmail, time, place, priUser, secUser);
+                                                        response.render("successMeetupScheduled.hbs", {
+                                                            message : "Your meetup has been scheduled with " + secUser + " at " + place + " on " + time + "."
+                                                        })
+                                                    }
+                                                })
+                                        }
+                                    })
+                            }
+                        });
+                }
+            })
+        }
+    })
+})
+
+
+// to reject meetup request
+
+app.post("/rejectRequest", (request, response) => {
+    let username = request.decode.username;
+    let destUsername = request.body.username;
+    db.collection("meetupDetails").updateOne({ "username": username},
+        {$pull: {'requests': destUsername}
+        });
+})
 
 app.listen(3000, () => {
     console.log("Server is up at port 3000");

@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-var config = require("./config"); //done
+var config = require("./key/config");
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
