@@ -224,6 +224,7 @@ app.get("/logout", (request, response) => {
 
 app.use((request, response, next) => {
     var token = request.cookies.sessionJWT;
+    console.log("Token banate hain")
     if (token) {
         jwt.verify(token , app.get('secret'), function (error , decode){
             console.log(decode);
@@ -411,6 +412,7 @@ app.post("/requestMeetup", (resuest, response) => {
 
 app.get("/pendingRequests", (request, response) => {
     let username = request.decode.username;
+    console.log("inside pending request")
     MongoClient.connect(url, {useNewUrlParser: true}, function (error, database) {
         if (error) {
             response.render("error.hbs", {
@@ -434,8 +436,9 @@ app.get("/pendingRequests", (request, response) => {
                         }
                         else {
                             let reqs = result.requests;
+                            console.log(reqs);
                             let lengthReqs = reqs.length;
-                            let send = new Array();
+                            sendi = new Array();
                             for (let i = 0; i < lengthReqs; i++){
                                 db.collection("meetupDetails").findOne({"username" : reqs[i]}, (err, res) => {
                                     if(err){
@@ -443,7 +446,10 @@ app.get("/pendingRequests", (request, response) => {
                                             error : error
                                         })
                                     }
+
                                     else {
+                                        console.log(res);
+
                                         let resObject = {
                                             "username" : res.username,
                                             "timeDate" : res.timeDate,
@@ -451,12 +457,17 @@ app.get("/pendingRequests", (request, response) => {
                                             "preference" : res.preference,
                                             "description" : res.description
                                         }
-                                        send.push(resObject);
+                                        sendi.push(resObject);
+                                        console.log(sendi);
+                                        if (i == lengthReqs - 1){
+                                            response.json(JSON.stringify(sendi));
+
+                                        }
+
                                     }
                                 })
                             }
-                            console.log(send);
-                            response.json(JSON.stringify(send));
+
                         }
                     });
                 }
@@ -510,6 +521,7 @@ app.post("/acceptRequest", (request, response) => {
                                             .split(' ')
                                             .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                                             .join(' ');
+                                        console.log(destUsername);
                                         db.collection("userDetails").findOne({"username" : destUsername},
                                             (error4, result4) => {
                                                 if (error4){
@@ -518,6 +530,7 @@ app.post("/acceptRequest", (request, response) => {
                                                     })
                                                 }
                                                 else {
+                                                    console.log(result4);
                                                     var secUser = result4.name;
                                                     secUser = secUser.toLowerCase()
                                                         .split(' ')
@@ -565,6 +578,7 @@ app.post("/acceptRequest", (request, response) => {
                                             })
                                         }
                                         else {
+                                            console.log(result2);
                                             let destEmail = result2.guardianEmail;
                                             var priUser = result2.name;
                                             priUser = priUser.toLowerCase()
@@ -609,6 +623,7 @@ app.post("/rejectRequest", (request, response) => {
     db.collection("meetupDetails").updateOne({ "username": username},
         {$pull: {'requests': destUsername}
         });
+    response.send("Rejected successfully");
 })
 
 app.listen(3500, () => {

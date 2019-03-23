@@ -91,7 +91,10 @@
 
     <div class="header">
         <div class="username">{{name}}</div>
-        <button class="logout">Logout</button>
+        <form action="/logout" method="get">
+            <button class="logout" type="submit">Logout</button>
+
+        </form>
     </div>
     <div>
         {{success}}
@@ -105,11 +108,11 @@
                     <div class="card col-md-10">
                         <div class="col-md-4">
                             <h3>Preference</h3>
-                            <input type="radio" name="pref" value="One">One<br>
-                            <input type="radio" name="pref" value="Two">Two<br>
-                            <input type="radio" name="pref" value="Three">Three<br>
-                            <input type="radio" name="pref" value="Four">Four<br>
-                            <input type="radio" name="pref" value="Five">Five<br>
+                            <input type="radio" name="pref" value="join me for yoga">Join me for yoga<br>
+                            <input type="radio" name="pref" value="current affairs">Current Affairs<br>
+                            <input type="radio" name="pref" value="Religious talks">Religious talks<br>
+                            <input type="radio" name="pref" value="Music and Movies">Music and movies<br>
+                            <input type="radio" name="pref" value="General gossip">General gossip<br>
                         </div>
                         <div class="col-md-4">
                             <h3>Time</h3>
@@ -170,144 +173,192 @@
 
     <script type="text/javascript">
 
-        var obj = [{'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
-            {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
-            {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'}];
+        // var obj = [{'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
+        //     {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'},
+        //     {'username':'Satin','date':'12/23/45','preference':'yoga','time':'6:00','description':'Some Description'}];
 
         // var main_card = document.getElementById("main_card");
 
 
-        for(var i=0;i<obj.length;i++) {
-            var got = document.getElementById("got");
-            // var start = document.createElement("div");
-            // start.classList.add("col-md-1");
-
-            // got.appendChild(start);
-
-            var node = document.createElement("div");
-            node.classList.add("col-md-10","card","pad");
-            var username = document.createElement("div");
-            username.classList.add("user_name","col-md-12")
-            var date = document.createElement("div");
-            date.classList.add("date","col-md-4");
-            var preference = document.createElement("div");
-            preference.classList.add("preferences","col-md-4");
-            var time = document.createElement("div");
-            time.classList.add("time","col-md-4");
-            var description = document.createElement("div");
-            // description.classList.add("")
-            var div1 = document.createElement("div");
-            div1.classList.add("col-md-1");
-            var btn1 = document.createElement("button");
-            btn1.classList.add("pad","col-md-4");
-            var btn2 = document.createElement("button");
-            btn2.classList.add("pad","col-md-4");
-            var div2 = document.createElement("div");
-            div2.classList.add("col-md-1");
-            // var end = document.createElement("div");
-            // end.classList.add("col-md-1");
-
-            // var username = document.getElementById("username");
-            username.innerHTML = obj[i]['username'];
-            // var date = document.getElementById("date");
-            date.innerHTML = obj[i]['date'];
-            // var preference = document.getElementById("preference");
-            preference.innerHTML = obj[i]['preference'];
-            // var time = document.getElementById('time');
-            time.innerHTML = obj[i]['time'];
-            // var description = document.getElementById("description");
-            description.innerHTML = obj[i]['description'];
-            btn1.innerHTML = 'Accept';
-            btn2.innerHTML = 'Reject';
-
-            node.appendChild(username);
-            node.appendChild(date);
-            node.appendChild(preference);
-            node.appendChild(time);
-            node.appendChild(description);
-            node.appendChild(div1);
-            node.appendChild(btn1);
-            node.appendChild(btn2);
-            node.appendChild(div2);
-
-
-            // main_card.appendChild(node);
-            got.appendChild(node);
-            // got.appendChild(end);
-        }
+        // for(var i=0;i<obj.length;i++) {
+        //     var got = document.getElementById("got");
+        //     // var start = document.createElement("div");
+        //     // start.classList.add("col-md-1");
+        //
+        //     // got.appendChild(start);
+        //
+        //     var node = document.createElement("div");
+        //     node.classList.add("col-md-10","card","pad");
+        //     var username = document.createElement("div");
+        //     username.classList.add("user_name","col-md-12")
+        //     var date = document.createElement("div");
+        //     date.classList.add("date","col-md-4");
+        //     var preference = document.createElement("div");
+        //     preference.classList.add("preferences","col-md-4");
+        //     var time = document.createElement("div");
+        //     time.classList.add("time","col-md-4");
+        //     var description = document.createElement("div");
+        //     // description.classList.add("")
+        //     var div1 = document.createElement("div");
+        //     div1.classList.add("col-md-1");
+        //     var btn1 = document.createElement("button");
+        //     btn1.classList.add("pad","col-md-4");
+        //     var btn2 = document.createElement("button");
+        //     btn2.classList.add("pad","col-md-4");
+        //     var div2 = document.createElement("div");
+        //     div2.classList.add("col-md-1");
+        //     // var end = document.createElement("div");
+        //     // end.classList.add("col-md-1");
+        //
+        //     // var username = document.getElementById("username");
+        //     username.innerHTML = obj[i]['username'];
+        //     // var date = document.getElementById("date");
+        //     date.innerHTML = obj[i]['date'];
+        //     // var preference = document.getElementById("preference");
+        //     preference.innerHTML = obj[i]['preference'];
+        //     // var time = document.getElementById('time');
+        //     time.innerHTML = obj[i]['time'];
+        //     // var description = document.getElementById("description");
+        //     description.innerHTML = obj[i]['description'];
+        //     btn1.innerHTML = 'Accept';
+        //     btn2.innerHTML = 'Reject';
+        //
+        //     node.appendChild(username);
+        //     node.appendChild(date);
+        //     node.appendChild(preference);
+        //     node.appendChild(time);
+        //     node.appendChild(description);
+        //     node.appendChild(div1);
+        //     node.appendChild(btn1);
+        //     node.appendChild(btn2);
+        //     node.appendChild(div2);
+        //
+        //
+        //     // main_card.appendChild(node);
+        //     got.appendChild(node);
+        //     // got.appendChild(end);
+        // }
 
 
         $(document).ready(function() {
-            $("#submit").click(function() {
-                $.ajax({
-                    type: 'GET',
-                    url: "http://"+a+".ngrok.io/pendingRequests",
-                    contentType: 'application/json',
+            let a = "96672ccf";
+            $.ajax({
+                type: 'GET',
+                url: "http://"+a+".ngrok.io/pendingRequests",
+                contentType: 'application/json',
 
-                    success: function(result) {
-                        // document.getElementById("output").innerHTML = result;
+                success: function(result) {
+                    console.log(result);
+                    result = JSON.parse(result);
+                    // document.getElementById("output").innerHTML = result;
 
-                        for(var i=0;i<obj.length;i++) {
-                            var got = document.getElementById("got");
-                            // var start = document.createElement("div");
-                            // start.classList.add("col-md-1");
+                    for(var i=0;i<result.length;i++) {
+                        var got = document.getElementById("got");
+                        // var start = document.createElement("div");
+                        // start.classList.add("col-md-1");
 
-                            // got.appendChild(start);
+                        // got.appendChild(start);
 
-                            var node = document.createElement("div");
-                            node.classList.add("col-md-10","card","pad");
-                            var username = document.createElement("div");
-                            username.classList.add("user_name","col-md-12")
-                            var date = document.createElement("div");
-                            date.classList.add("date","col-md-4");
-                            var preference = document.createElement("div");
-                            preference.classList.add("preferences","col-md-4");
-                            var time = document.createElement("div");
-                            time.classList.add("time","col-md-4");
-                            var description = document.createElement("div");
-                            // description.classList.add("")
-                            var div1 = document.createElement("div");
-                            div1.classList.add("col-md-1");
-                            var btn1 = document.createElement("button");
-                            btn1.classList.add("pad","col-md-4");
-                            var btn2 = document.createElement("button");
-                            btn2.classList.add("pad","col-md-4");
-                            var div2 = document.createElement("div");
-                            div2.classList.add("col-md-1");
-                            // var end = document.createElement("div");
-                            // end.classList.add("col-md-1");
+                        var node = document.createElement("div");
+                        node.classList.add("col-md-10","card","pad");
+                        var username = document.createElement("div");
+                        username.appendChild(document.createTextNode(result[i]['username']));
+                        username.classList.add("user_name","col-md-12");
+                        var date = document.createElement("div");
+                        date.classList.add("date","col-md-4");
+                        date.appendChild(document.createTextNode(result[i]['location']));
+                        var preference = document.createElement("div");
+                        preference.classList.add("preferences","col-md-4");
+                        preference.appendChild(document.createTextNode(result[i]['preference']));
+                        var time = document.createElement("div");
+                        time.classList.add("time","col-md-4");
+                        time.appendChild(document.createTextNode(result[i]['timeDate']));
+                        var description = document.createElement("div");
+                        description.appendChild(document.createTextNode(result[i]['description']));
+                        // description.classList.add("")
+                        var div1 = document.createElement("div");
 
-                            // var username = document.getElementById("username");
-                            username.innerHTML = result[i]['username'];
-                            // var date = document.getElementById("date");
-                            date.innerHTML = result[i]['date'];
-                            // var preference = document.getElementById("preference");
-                            preference.innerHTML = result[i]['preference'];
-                            // var time = document.getElementById('time');
-                            time.innerHTML = result[i]['time'];
-                            // var description = document.getElementById("description");
-                            description.innerHTML = result[i]['description'];
-                            btn1.innerHTML = 'Accept';
-                            btn2.innerHTML = 'Reject';
+                        div1.classList.add("col-md-1");
+                        var btn1 = document.createElement("button");
+                        btn1.classList.add("pad","col-md-4");
+                        btn1.setAttribute("type", "submit");
+                        btn1.setAttribute("name", result[i]['username']);
+                        var btn2 = document.createElement("button");
+                        btn2.classList.add("pad","col-md-4");
+                        btn2.setAttribute("type", "submit");
+                        btn2.setAttribute("name", result[i]['username']);
 
-                            node.appendChild(username);
-                            node.appendChild(date);
-                            node.appendChild(preference);
-                            node.appendChild(time);
-                            node.appendChild(description);
-                            node.appendChild(div1);
-                            node.appendChild(btn1);
-                            node.appendChild(btn2);
-                            node.appendChild(div2);
+                        btn1.addEventListener('click', function() {
+                            var name = $(this).attr("name");
+                            console.log(name);
+                            value = {"username": name};
+                            $.ajax({
+                                type: "POST",
+                                url: "http://" + a + ".ngrok.io/acceptRequest",
+                                contentType: "application/json",
+                                data: JSON.stringify(value),
+                                success: function (result) {
+                                    $("body").innerHTML = result;
+
+                                }
+                            });
+                        })
 
 
-                            // main_card.appendChild(node);
-                            got.appendChild(node);
-                            // got.appendChild(end);
-                        }
+                        btn2.addEventListener('click', function() {
+                            var name = $(this).attr("name");
+                            console.log(name);
+                            value = {"username": name};
+                            $.ajax({
+                                type: "POST",
+                                url: "http://" + a + ".ngrok.io/rejectRequest",
+                                contentType: "application/json",
+                                data: JSON.stringify(value),
+                                success: function (result) {
+                                    $(".card").hide();
+                                    $("#got").hide();
+                                    var d = document.createElement("div");
+                                    d.appendChild(document.createTextNode(result));
+                                }
+                            });
+                        })
 
+
+
+                        var div2 = document.createElement("div");
+                        div2.classList.add("col-md-1");
+                        // var end = document.createElement("div");
+                        // end.classList.add("col-md-1");
+
+                        // var username = document.getElementById("username");
+                        // var date = document.getElementById("date");
+                        date.innerHTML = result[i]['location'];
+                        // var preference = document.getElementById("preference");
+                        preference.innerHTML = result[i]['preference'];
+                        // var time = document.getElementById('time');
+                        time.innerHTML = result[i]['timeDate'];
+                        // var description = document.getElementById("description");
+                        description.innerHTML = result[i]['description'];
+                        btn1.innerHTML = 'Accept';
+                        btn2.innerHTML = 'Reject';
+
+                        node.appendChild(username);
+                        node.appendChild(date);
+                        node.appendChild(preference);
+                        node.appendChild(time);
+                        node.appendChild(description);
+                        node.appendChild(div1);
+                        node.appendChild(btn1);
+                        node.appendChild(btn2);
+                        node.appendChild(div2);
+
+
+                        // main_card.appendChild(node);
+                        got.appendChild(node);
+                        // got.appendChild(end);
                     }
-                })
+
+                }
             })
         })
 
