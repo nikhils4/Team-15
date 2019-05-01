@@ -6,7 +6,7 @@ VinHack - A Hackathon by VinnovateIT
 Develop an app/website where old age people can choose a cateogry of work like nursery management, moral teaching to kids, yoga etc.
 
 
-## Contibutors 
+## Contributors 
 
 * Nikhil Singh 17BIT0192
 * Satin Jain 17BIT0113
